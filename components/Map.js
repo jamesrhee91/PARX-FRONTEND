@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Silver from '../mapStyles/Silver.json'
+import Dark from '../mapStyles/Dark.json'
+import Night from '../mapStyles/Night.json'
+import Retro from '../mapStyles/Retro.json'
 import {
   AppRegistry,
   StyleSheet,
@@ -29,7 +32,7 @@ export default class Map extends Component {
 
   async getDirections(startLoc, destinationLoc) {
         try {
-            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${ startLoc }&destination=${ destinationLoc }`)
+            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${ startLoc }&destination=${ destinationLoc }&key=AIzaSyB-cZIUj0WhKunsFb-hL_D_BRcDpi_ENlg`)
             let respJson = await resp.json();
             let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
             let coords = points.map((point, index) => {
@@ -49,12 +52,17 @@ export default class Map extends Component {
   render() {
     return (
       <View>
-        <MapView style={styles.map} initialRegion={{
-          latitude: 40.764070,
-          longitude: -73.926005,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
-        }}>
+        <MapView
+          style={styles.map}
+          provider={ PROVIDER_GOOGLE }
+          customMapStyle={ Silver }
+          initialRegion={{
+            latitude: 40.764070,
+            longitude: -73.926005,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }}
+        >
 
         <MapView.Polyline
             coordinates={this.state.coords}
