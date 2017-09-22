@@ -14,25 +14,38 @@ import {
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import Polyline from '@mapbox/polyline';
 
-export default class Map extends Component {
+export default class Directions extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      region: {
+        latitude: 40.764326,
+        longitude: -73.925683,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
       coords: []
     }
   }
 
   componentDidMount() {
-    // find your origin and destination point coordinates and pass it to our method.
-    // I am using Bursa,TR -> Istanbul,TR for this example
     navigator.geolocation.getCurrentPosition(pos => {
-      this.getDirections(`${pos.coords.latitude}, ${pos.coords.longitude}`, "40.764070, -73.926005")
+      console.log(pos);
+      this.setState({
+        region: {
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }
+      })
     })
+    // this.getDirections("40.7050858, -74.0142077", "40.764326, -73.925683")
   }
 
   async getDirections(startLoc, destinationLoc) {
         try {
-            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${ startLoc }&destination=${ destinationLoc }&key=AIzaSyB-cZIUj0WhKunsFb-hL_D_BRcDpi_ENlg`)
+            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${ startLoc }&destination=${ destinationLoc }`)
             let respJson = await resp.json();
             let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
             let coords = points.map((point, index) => {
@@ -50,19 +63,20 @@ export default class Map extends Component {
     }
 
   render() {
+    console.log("REGION", this.state.region);
     return (
       <View>
         <MapView
           style={styles.map}
           provider={ PROVIDER_GOOGLE }
-          customMapStyle={ Silver }
-          initialRegion={{
-            latitude: 40.764070,
-            longitude: -73.926005,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
-        >
+          showsUserLocation={ true }
+          showsMyLocationButton={ true }
+          showsTraffic={ true }
+          customMapStyle={ Retro }
+          region={ this.state.region }
+          onRegionChange={ region => this.setState({region}) }
+          onRegionChangeComplete={ region => this.setState({region}) }
+          >
 
         <MapView.Polyline
             coordinates={this.state.coords}
@@ -87,4 +101,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('Map', () => Map);
+AppRegistry.registerComponent('Directions', () => Directions);

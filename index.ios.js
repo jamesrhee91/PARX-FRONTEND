@@ -1,11 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
-import Map from './components/Map'
+import MapContainer from './components/MapContainer'
+import TestMap from './components/TestMap'
+import Directions from './components/Directions'
 import {
   AppRegistry,
   StyleSheet,
@@ -17,22 +13,11 @@ import {
 export default class Parx extends Component {
   render() {
     return (
-      <View >
-        <Map style={styles.container} />
+      <View>
+        <MapContainer />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
-  }
-});
 
 AppRegistry.registerComponent('Parx', () => Parx);
