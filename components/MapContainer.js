@@ -1,17 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import Silver from '../mapStyles/Silver.json'
 import Dark from '../mapStyles/Dark.json'
 import Night from '../mapStyles/Night.json'
 import Retro from '../mapStyles/Retro.json'
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions
-} from 'react-native';
-
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import * as locationActions from '../actions/location'
+import { connect } from 'react-redux'
+import { AppRegistry, StyleSheet, Text, View, Dimensions } from 'react-native'
+import { bindActionCreators } from 'redux'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 
 const dims = Dimensions.get('window')
 const ASPECT_RATIO = dims.width / dims.height
@@ -20,65 +16,54 @@ const LONGITUDE = -73.925683
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 
-export default class MapContainer extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      region: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      }
-    }
-  }
+class MapContainer extends Component {
 
-  componentDidMount() {
-    navigator.geolocation.getCurrentPosition(pos => {
-      console.log(pos);
-      this.setState({
-        region: {
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA
-        }
-      })
-    })
+  componentWillMount() {
+    this.props.fetchLocation()
   }
 
   onRegionChange = (region) => {
-    this.setState({ region })
+    this.props.regionChange(region)
   }
 
   onRegionChangeComplete = (region) => {
-    this.setState({ region })
+    this.props.regionComplete(region)
   }
 
   render() {
-    // console.log("REGION", this.state.region);
-            // showsTraffic={ true }
-    return (
-      <View>
-        <View style={{backgroundColor: 'coral', height: 70, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>longitude: {this.state.region.longitude}</Text>
-          <Text>latitude: {this.state.region.latitude}</Text>
+    if (this.props.isLoading){
+      console.log("MAP");
+      return (
+        <View><Text>LOADING!!</Text></View>
+      )
+    } else {
+      console.log("LOADING PAGE");
+      return(
+        <View>
+          <View style={{backgroundColor: 'coral', height: '15%', justifyContent: 'center', alignItems: 'center'}}>
+            <Text>Changing latitude: {this.props.region.latitude}</Text>
+            <Text>Changing longitude: {this.props.region.longitude}</Text>
+            <Text>Final latitude: {this.props.current.latitude}</Text>
+            <Text>Final longitude: {this.props.current.longitude}</Text>
+          </View>
+          <MapView
+            style={ styles.map }
+            provider={ PROVIDER_GOOGLE }
+            showsUserLocation={ true }
+            showsMyLocationButton={ true }
+            showsTraffic={ true }
+            customMapStyle={ Retro }
+            initialRegion={ this.props.region }
+            onRegionChange={ this.onRegionChange }
+            onRegionChangeComplete={ this.onRegionChangeComplete }
+            >
+          </MapView>
         </View>
-        <MapView
-          style={ styles.map }
-          provider={ PROVIDER_GOOGLE }
-          showsUserLocation={ true }
-          showsMyLocationButton={ true }
-          customMapStyle={ Retro }
-
-          region={ this.state.region }
-          onRegionChangeComplete={ this.onRegionChangeComplete }
-          >
-        </MapView>
-      </View>
-    )
+      )
+    }
   }
 }
+
 
 const styles = StyleSheet.create({
   map: {
@@ -88,8 +73,23 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     width: '100%',
-    height: '100%'
+    height: '85%'
   }
 })
 
-AppRegistry.registerComponent('MapContainer', () => MapContainer);
+AppRegistry.registerComponent('MapContainer', () => MapContainer)
+
+
+function mapStateToProps(state) {
+  return {
+    region: state.loader.region,
+    current: state.loader.current,
+    isLoading: state.loader.isLoading
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(locationActions, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapContainer)
