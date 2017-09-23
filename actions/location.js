@@ -7,6 +7,13 @@ export function fetchLocation() {
   }
 }
 
+export function fetchParking(coords) {
+  return {
+    type: 'FETCH_PARKING',
+    payload: coords
+  }
+}
+
 export function regionChange(region) {
   return {
     type: 'CHANGING',

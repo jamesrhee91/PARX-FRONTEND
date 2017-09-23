@@ -8,13 +8,10 @@ import { connect } from 'react-redux'
 import { AppRegistry, StyleSheet, Text, View, Dimensions } from 'react-native'
 import { bindActionCreators } from 'redux'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
-
-const dims = Dimensions.get('window')
-const ASPECT_RATIO = dims.width / dims.height
-const LATITUDE = 40.764326
-const LONGITUDE = -73.925683
-const LATITUDE_DELTA = 0.0922
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+import { Button, Icon } from 'native-base'
+import LeavingButton from './LeavingButton'
+import FindButton from './FindButton'
+import Marker from './Marker'
 
 class MapContainer extends Component {
 
@@ -30,14 +27,58 @@ class MapContainer extends Component {
     this.props.regionComplete(region)
   }
 
+  saveLocation = () => {
+    const data = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': "application/json"
+     },
+      body: JSON.stringify({
+        location: {
+          lon: Number((this.props.current.longitude).toFixed(4)),
+          lat: Number((this.props.current.latitude).toFixed(4))
+        }
+      })
+    }
+    fetch('http://localhost:3000/api/v1/locations', data)
+      .then(res => res.json())
+      .then(json => console.log(json))
+  }
+
+  findParking = () => {
+    const temp = '40_705&-74_014'
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': "application/json"
+      }
+    }
+    fetch(`http://localhost:3000/api/v1/locations/${temp}`, headers)
+      .then(res => res.json())
+      .then(locations => {
+        console.log(locations)
+        if (locations.error) {
+          console.log("ERROR WHEN FETCHING PARKING")
+        } else {
+          console.log("FETCHING", locations);
+          this.props.fetchParking(locations)
+        }
+    })
+  }
+
   render() {
     if (this.props.isLoading){
-      console.log("MAP");
       return (
         <View><Text>LOADING!!</Text></View>
       )
     } else {
-      console.log("LOADING PAGE");
+      const markers = this.props.coords.map(coord => {
+        return (
+          <MapView.Marker coordinate={ {latitude: coord.lat, longitude: coord.lng, latitudeDelta: 0.0922, longitudeDelta: 0.0421} } />
+        )
+      })
+      console.log("COORDS:", markers);
       return(
         <View>
           <View style={{backgroundColor: 'coral', height: '15%', justifyContent: 'center', alignItems: 'center'}}>
@@ -57,6 +98,9 @@ class MapContainer extends Component {
             onRegionChange={ this.onRegionChange }
             onRegionChangeComplete={ this.onRegionChangeComplete }
             >
+            <LeavingButton saveLocation={ this.saveLocation } />
+            <FindButton findParking={ this.findParking } />
+            { markers }
           </MapView>
         </View>
       )
@@ -84,6 +128,7 @@ function mapStateToProps(state) {
   return {
     region: state.loader.region,
     current: state.loader.current,
+    coords: state.loader.coords,
     isLoading: state.loader.isLoading
   }
 }
