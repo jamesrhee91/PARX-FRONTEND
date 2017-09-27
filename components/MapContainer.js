@@ -14,6 +14,7 @@ import LeavingButton from './LeavingButton'
 import FindButton from './FindButton'
 import ClearButton from './ClearButton'
 import Marker from './Marker'
+import Search from './Search'
 
 class MapContainer extends Component {
 
@@ -23,10 +24,6 @@ class MapContainer extends Component {
 
   onRegionChange = (region) => {
     this.props.regionChange(region)
-  }
-
-  onRegionChangeComplete = (region) => {
-    this.props.regionComplete(region)
   }
 
   saveLocation = () => {
@@ -50,39 +47,44 @@ class MapContainer extends Component {
     this.props.setRoute(coord)
   }
 
+  animate = (coords, duration) => {
+    this.refs.map.animateToCoordinate(coords, duration)
+  }
+
   render() {
     if (this.props.isLoading){
       return (
         <View><Text>LOADING!!</Text></View>
       )
     } else {
-      // centerOffset={ {x: coord.lat, y: coord.lng} }
+      // <MapView.Marker
+      //   key={idx}
+      //   coordinate={ {latitude: coord.lat, longitude: coord.lng, latitudeDelta: 0.0922, longitudeDelta: 0.0421} }
+      //   onPress={() => this.animate({latitude: coord.lat, longitude: coord.lng}, 1) }
+      //   >
+      //     <MapView.Callout onPress={() => this.routeCoords(null, coord) } >
+      //       <Text>Click to route here!</Text>
+      //     </MapView.Callout>
+      //   </MapView.Marker>
       const markers = this.props.coords.map((coord, idx) => {
         return (
-          <MapView.Marker
-            key={idx}
-            coordinate={ {latitude: coord.lat, longitude: coord.lng, latitudeDelta: 0.0922, longitudeDelta: 0.0421} }
-            >
-            <MapView.Callout onPress={() => this.routeCoords(null, coord) } >
-              <Text>Click to route here!</Text>
-            </MapView.Callout>
-          </MapView.Marker>
+          <Marker key={idx} animate={this.animate} routeCoords={this.routeCoords} coord={coord} />
         )
       })
       return(
         <View>
           <MapView
             style={ styles.map }
+            ref="map"
             provider={ PROVIDER_GOOGLE }
             showsUserLocation={ true }
             showsMyLocationButton={ true }
             showsTraffic={ true }
-            customMapStyle={ Retro }
+            customMapStyle={ Silver }
             initialRegion={ this.props.region }
             onRegionChange={ this.onRegionChange }
-            onRegionChangeComplete={ this.onRegionChangeComplete }
             >
-              {this.props.route.length > 0 ? <MapView.Polyline coordinates={this.props.route} strokeWidth={3} strokeColor="blue" /> : null}
+              {this.props.route.length > 0 ? <MapView.Polyline coordinates={this.props.route} strokeWidth={5} strokeColor="#232223" /> : null}
               { markers }
             </MapView>
             <View style={ styles.container }>
@@ -91,10 +93,11 @@ class MapContainer extends Component {
                 <FindButton findParking={ this.findParking } />
                 {this.props.coords.length > 0 ? <ClearButton style={ styles.clear } clearParking={ this.clearParking }/> : null}
               </View>
+              <Search animate={ this.animate }/>
               <View style={ styles.overlay }>
                 <View style={ styles.overlaySize }>
-                  <Text>lat: {this.props.region.latitude}</Text>
-                  <Text>lng: {this.props.region.longitude}</Text>
+                  <Text style={ styles.text }>lat: {this.props.region.latitude}</Text>
+                  <Text style={ styles.text }>lng: {this.props.region.longitude}</Text>
                 </View>
               </View>
               <View style={styles.test} >
@@ -132,13 +135,17 @@ const styles = StyleSheet.create({
     zIndex: -1
   },
   overlay: {
-    backgroundColor: 'coral',
+    backgroundColor: '#2f3030',
     justifyContent: 'flex-end',
-    alignSelf: 'center'
-
+    alignSelf: 'center',
+    opacity: 0.5
     // position: 'absolute',
     // width: dims.width,
     // bottom: (-1 * dims.height) + 100
+  },
+  text: {
+    alignSelf: 'center',
+    color: 'white'
   },
   overlaySize: {
     width: dims.width/2

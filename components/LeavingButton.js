@@ -6,15 +6,25 @@ const LeavingButton = ({ saveLocation }) => {
 
   const handlePress = () => {
     console.log('LEAVING WAS PRESSED', saveLocation)
-    saveLocation()
+    // saveLocation()
   }
+  // <RectangleButton
+  //   onPress={ handlePress }
+  //   text={ 'Leaving' }
+  //   >
+  //   </RectangleButton>
 
   return (
-    <RectangleButton
+    <ButtonComponent
+      text="Leaving"
+      type="primary"
+      shape="rectangle"
+      backgroundColors={['#2f3030', '#b8bcbc']}
+      gradientStart={{ x: 0.5, y: 1 }}
+      gradientEnd={{ x: 1, y: 1 }}
       onPress={ handlePress }
-      text={ 'Leaving' }
     >
-    </RectangleButton>
+    </ButtonComponent>
   )
 }
 

@@ -9,12 +9,22 @@ const FindButton = ({ findParking }) => {
     findParking()
   }
 
+  // <RectangleButton
+  //   onPress={ handlePress }
+  //   text="Find"
+  //   >
+  //   </RectangleButton>
   return (
-    <RectangleButton
-      onPress={ handlePress }
+    <ButtonComponent
       text="Find"
+      type="primary"
+      shape="rectangle"
+      backgroundColors={['#2f3030', '#b8bcbc']}
+      gradientStart={{ x: 0.5, y: 1 }}
+      gradientEnd={{ x: 1, y: 1 }}
+      onPress={ handlePress }
     >
-    </RectangleButton>
+    </ButtonComponent>
   )
 }
 

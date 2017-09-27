@@ -31,6 +31,7 @@ export default function loadReducer(state = {
     case 'FETCHING_LOCATION':
       return { ...state, isLoading: true }
     case 'FETCHED_LOCATION':
+    console.log('FETCHED', action.payload);
       return { ...state,
         region: {
           latitude: action.payload.latitude,

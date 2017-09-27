@@ -8,12 +8,22 @@ const ClearButton = ({ clearParking }) => {
     clearParking()
   }
 
+  // <RectangleButton
+  //   text={ "Clear" }
+  //   onPress={ handlePress }
+  //   >
+  //   </RectangleButton>
   return (
-    <RectangleButton
-      text={ "Clear" }
+    <ButtonComponent
+      text="Clear results"
+      type="primary"
+      shape="rectangle"
+      backgroundColors={['#39d1e5', '#b8bcbc']}
+      gradientStart={{ x: 0.5, y: 1 }}
+      gradientEnd={{ x: 1, y: 1 }}
       onPress={ handlePress }
-      >
-    </RectangleButton>
+    >
+    </ButtonComponent>
   )
 }
 
