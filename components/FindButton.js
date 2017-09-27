@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Button, Icon } from 'native-base'
+import { StyleSheet, Text, View, Button } from 'react-native'
+import ButtonComponent, { CircleButton, RoundButton, RectangleButton } from 'react-native-button-component'
 
 const FindButton = ({ findParking }) => {
 
@@ -10,11 +10,11 @@ const FindButton = ({ findParking }) => {
   }
 
   return (
-    <View>
-      <Button rounded success right onPress={ handlePress } >
-        <Text style={{color: 'white'}}>Find Parking</Text>
-      </Button>
-    </View>
+    <RectangleButton
+      onPress={ handlePress }
+      text="Find"
+    >
+    </RectangleButton>
   )
 }
 

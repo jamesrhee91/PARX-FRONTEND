@@ -21,7 +21,10 @@ export default function loadReducer(state = {
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA
   },
+  userLoc: {},
   coords: [],
+  route: [],
+  marker: null,
   isLoading: false
 }, action) {
   switch (action.type) {
@@ -34,6 +37,10 @@ export default function loadReducer(state = {
           longitude: action.payload.longitude,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA
+        },
+        userLoc: {
+          lat: action.payload.latitude,
+          lng: action.payload.longitude
         },
         isLoading: false
       }
@@ -57,12 +64,23 @@ export default function loadReducer(state = {
         },
         isLoading: false
       }
-    case 'FETCH_PARKING':
-      console.log("HITTING ACTION", action.payload);
+    case 'FETCHED_COORDS':
       return { ...state,
-        coords: action.payload,
-        isLoading: false
+        coords: action.payload
       }
+    case 'SET_ROUTE':
+      return { ...state,
+        coords: action.payload
+      }
+    case 'CLEAR':
+      return { ...state,
+        coords: action.payload
+      }
+    case 'PATH':
+      return { ...state,
+        route: action.payload
+      }
+    case 'SAVED_LOCATION':
     default:
       return state
   }

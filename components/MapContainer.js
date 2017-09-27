@@ -5,17 +5,19 @@ import Night from '../mapStyles/Night.json'
 import Retro from '../mapStyles/Retro.json'
 import * as locationActions from '../actions/location'
 import { connect } from 'react-redux'
-import { AppRegistry, StyleSheet, Text, View, Dimensions } from 'react-native'
+import { AppRegistry, StyleSheet, Text, View, Dimensions, Button } from 'react-native'
 import { bindActionCreators } from 'redux'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
-import { Button, Icon } from 'native-base'
+import ActionButton from 'react-native-action-button'
+import Icon from 'react-native-vector-icons/Ionicons'
 import LeavingButton from './LeavingButton'
 import FindButton from './FindButton'
+import ClearButton from './ClearButton'
 import Marker from './Marker'
 
 class MapContainer extends Component {
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchLocation()
   }
 
@@ -28,43 +30,24 @@ class MapContainer extends Component {
   }
 
   saveLocation = () => {
-    const data = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': "application/json"
-     },
-      body: JSON.stringify({
-        location: {
-          lon: Number((this.props.current.longitude).toFixed(4)),
-          lat: Number((this.props.current.latitude).toFixed(4))
-        }
-      })
-    }
-    fetch('http://localhost:3000/api/v1/locations', data)
-      .then(res => res.json())
-      .then(json => console.log(json))
+    this.props.sendData(this.props.current.latitude, this.props.current.longitude)
   }
 
   findParking = () => {
-    const temp = '40_705&-74_014'
-    const headers = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': "application/json"
-      }
-    }
-    fetch(`http://localhost:3000/api/v1/locations/${temp}`, headers)
-      .then(res => res.json())
-      .then(locations => {
-        console.log(locations)
-        if (locations.error) {
-          console.log("ERROR WHEN FETCHING PARKING")
-        } else {
-          console.log("FETCHING", locations);
-          this.props.fetchParking(locations)
-        }
-    })
+    this.props.getData(this.props.current)
+  }
+
+  clearParking = () => {
+    console.log("CLEARING RESULTS")
+    this.props.clearCoords()
+    this.props.clearRoute()
+  }
+
+  routeCoords = (e, coord) => {
+    const start = `${this.props.userLoc.lat}, ${this.props.userLoc.lng}`
+    const dest = `${coord.lat}, ${coord.lng}`
+    this.props.getDirections(start, dest)
+    this.props.setRoute(coord)
   }
 
   render() {
@@ -73,20 +56,21 @@ class MapContainer extends Component {
         <View><Text>LOADING!!</Text></View>
       )
     } else {
-      const markers = this.props.coords.map(coord => {
+      // centerOffset={ {x: coord.lat, y: coord.lng} }
+      const markers = this.props.coords.map((coord, idx) => {
         return (
-          <MapView.Marker coordinate={ {latitude: coord.lat, longitude: coord.lng, latitudeDelta: 0.0922, longitudeDelta: 0.0421} } />
+          <MapView.Marker
+            key={idx}
+            coordinate={ {latitude: coord.lat, longitude: coord.lng, latitudeDelta: 0.0922, longitudeDelta: 0.0421} }
+            >
+            <MapView.Callout onPress={() => this.routeCoords(null, coord) } >
+              <Text>Click to route here!</Text>
+            </MapView.Callout>
+          </MapView.Marker>
         )
       })
-      console.log("COORDS:", markers);
       return(
         <View>
-          <View style={{backgroundColor: 'coral', height: '15%', justifyContent: 'center', alignItems: 'center'}}>
-            <Text>Changing latitude: {this.props.region.latitude}</Text>
-            <Text>Changing longitude: {this.props.region.longitude}</Text>
-            <Text>Final latitude: {this.props.current.latitude}</Text>
-            <Text>Final longitude: {this.props.current.longitude}</Text>
-          </View>
           <MapView
             style={ styles.map }
             provider={ PROVIDER_GOOGLE }
@@ -98,26 +82,87 @@ class MapContainer extends Component {
             onRegionChange={ this.onRegionChange }
             onRegionChangeComplete={ this.onRegionChangeComplete }
             >
-            <LeavingButton saveLocation={ this.saveLocation } />
-            <FindButton findParking={ this.findParking } />
-            { markers }
-          </MapView>
+              {this.props.route.length > 0 ? <MapView.Polyline coordinates={this.props.route} strokeWidth={3} strokeColor="blue" /> : null}
+              { markers }
+            </MapView>
+            <View style={ styles.container }>
+              <View style={ styles.button }>
+                <LeavingButton saveLocation={ this.saveLocation } />
+                <FindButton findParking={ this.findParking } />
+                {this.props.coords.length > 0 ? <ClearButton style={ styles.clear } clearParking={ this.clearParking }/> : null}
+              </View>
+              <View style={ styles.overlay }>
+                <View style={ styles.overlaySize }>
+                  <Text>lat: {this.props.region.latitude}</Text>
+                  <Text>lng: {this.props.region.longitude}</Text>
+                </View>
+              </View>
+              <View style={styles.test} >
+                <ActionButton buttonColor="rgba(231,76,60,1)">
+                  <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
+                    <Icon name="md-create" style={styles.actionButtonIcon} />
+                  </ActionButton.Item>
+                  <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => {}}>
+                    <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+                  </ActionButton.Item>
+                  <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => {}}>
+                    <Icon name="md-done-all" style={styles.actionButtonIcon} />
+                  </ActionButton.Item>
+                </ActionButton>
+              </View>
+            </View>
         </View>
       )
     }
   }
 }
-
+const dims = Dimensions.get('window')
 
 const styles = StyleSheet.create({
-  map: {
-    position: 'relative',
+  container: {
+    position: 'absolute',
     top: 0,
     left: 0,
-    right: 0,
-    bottom: 0,
-    width: '100%',
-    height: '85%'
+    right: 0
+  },
+  map: {
+    // position: 'absolute',
+    width: dims.width,
+    height: dims.height,
+    zIndex: -1
+  },
+  overlay: {
+    backgroundColor: 'coral',
+    justifyContent: 'flex-end',
+    alignSelf: 'center'
+
+    // position: 'absolute',
+    // width: dims.width,
+    // bottom: (-1 * dims.height) + 100
+  },
+  overlaySize: {
+    width: dims.width/2
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  actionButtion: {
+    flex:1,
+    backgroundColor: '#f3f3f3',
+    position: 'absolute',
+    top: 500
+  },
+  test: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end'
+  },
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
   }
 })
 
@@ -128,7 +173,10 @@ function mapStateToProps(state) {
   return {
     region: state.loader.region,
     current: state.loader.current,
+    userLoc: state.loader.userLoc,
     coords: state.loader.coords,
+    route: state.loader.route,
+    marker: state.loader.marker,
     isLoading: state.loader.isLoading
   }
 }

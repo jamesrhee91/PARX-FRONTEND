@@ -28,20 +28,20 @@ export default class Directions extends Component {
     }
   }
 
-  componentDidMount() {
-    navigator.geolocation.getCurrentPosition(pos => {
-      console.log(pos);
-      this.setState({
-        region: {
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
-        }
-      })
-    })
-    // this.getDirections("40.7050858, -74.0142077", "40.764326, -73.925683")
-  }
+  // componentDidMount() {
+  //   navigator.geolocation.getCurrentPosition(pos => {
+  //     console.log(pos);
+  //     this.setState({
+  //       region: {
+  //         latitude: pos.coords.latitude,
+  //         longitude: pos.coords.longitude,
+  //         latitudeDelta: 0.0922,
+  //         longitudeDelta: 0.0421
+  //       }
+  //     })
+  //   })
+  //   // this.getDirections("40.7050858, -74.0142077", "40.764326, -73.925683")
+  // }
 
   async getDirections(startLoc, destinationLoc) {
         try {

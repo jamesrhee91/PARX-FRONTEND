@@ -1,21 +1,20 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Button, Icon } from 'native-base'
+import { StyleSheet, Text, View, Button } from 'react-native'
+import ButtonComponent, { CircleButton, RoundButton, RectangleButton } from 'react-native-button-component'
 
 const LeavingButton = ({ saveLocation }) => {
 
   const handlePress = () => {
     console.log('LEAVING WAS PRESSED', saveLocation)
-    // saveLocation()
+    saveLocation()
   }
 
   return (
-    <View>
-      <Button iconLeft onPress={ handlePress } >
-        <Icon name='home' />
-        <Text style={{color: 'white'}}>Home</Text>
-      </Button>
-    </View>
+    <RectangleButton
+      onPress={ handlePress }
+      text={ 'Leaving' }
+    >
+    </RectangleButton>
   )
 }
 
@@ -28,9 +27,8 @@ const styles = StyleSheet.create({
     width: 100
   },
   button: {
-    flex: 1,
-    flexDirection: "column",
-    alignSelf: "flex-end"
+    position: 'relative',
+    top: 100
   }
 })
 
