@@ -34,10 +34,10 @@ class MapContainer extends Component {
     this.props.getData(this.props.current)
   }
 
-  clearParking = () => {
-    console.log("CLEARING RESULTS")
-    this.props.clearCoords()
-    this.props.clearRoute()
+  clearMarkers = (e) => {
+    if (!e.nativeEvent.action) {
+      this.props.clearCoords()
+    }
   }
 
   routeCoords = (e, coord) => {
@@ -49,6 +49,11 @@ class MapContainer extends Component {
 
   animate = (coords, duration) => {
     this.refs.map.animateToCoordinate(coords, duration)
+  }
+
+  handleLongPress = (e) => {
+    this.props.dispatchlongPress(e.nativeEvent.coordinate)
+    this.props.currentLocation(e.nativeEvent.coordinate)
   }
 
   render() {
@@ -65,56 +70,56 @@ class MapContainer extends Component {
       //     <MapView.Callout onPress={() => this.routeCoords(null, coord) } >
       //       <Text>Click to route here!</Text>
       //     </MapView.Callout>
-      //   </MapView.Marker>
+      // </MapView.Marker>
+      // <View style={ styles.button }>
+      //   <LeavingButton saveLocation={ this.saveLocation } />
+      //   <FindButton findParking={ this.findParking } />
+      //   {this.props.coords.length > 0 ? <ClearButton style={ styles.clear } clearParking={ this.clearParking }/> : null}
+      // </View>
       const markers = this.props.coords.map((coord, idx) => {
         return (
           <Marker key={idx} animate={this.animate} routeCoords={this.routeCoords} coord={coord} />
         )
       })
       return(
-        <View>
-          <MapView
-            style={ styles.map }
-            ref="map"
-            provider={ PROVIDER_GOOGLE }
-            showsUserLocation={ true }
-            showsMyLocationButton={ true }
-            showsTraffic={ true }
-            customMapStyle={ Silver }
-            initialRegion={ this.props.region }
-            onRegionChange={ this.onRegionChange }
-            >
-              {this.props.route.length > 0 ? <MapView.Polyline coordinates={this.props.route} strokeWidth={5} strokeColor="#232223" /> : null}
-              { markers }
-            </MapView>
-            <View style={ styles.container }>
-              <View style={ styles.button }>
-                <LeavingButton saveLocation={ this.saveLocation } />
-                <FindButton findParking={ this.findParking } />
-                {this.props.coords.length > 0 ? <ClearButton style={ styles.clear } clearParking={ this.clearParking }/> : null}
-              </View>
-              <Search animate={ this.animate }/>
-              <View style={ styles.overlay }>
-                <View style={ styles.overlaySize }>
-                  <Text style={ styles.text }>lat: {this.props.region.latitude}</Text>
-                  <Text style={ styles.text }>lng: {this.props.region.longitude}</Text>
-                </View>
-              </View>
-              <View style={styles.test} >
-                <ActionButton buttonColor="rgba(231,76,60,1)">
-                  <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
-                    <Icon name="md-create" style={styles.actionButtonIcon} />
-                  </ActionButton.Item>
-                  <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => {}}>
-                    <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
-                  </ActionButton.Item>
-                  <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => {}}>
-                    <Icon name="md-done-all" style={styles.actionButtonIcon} />
-                  </ActionButton.Item>
-                </ActionButton>
-              </View>
+      <View>
+        <MapView
+          style={ styles.map }
+          ref="map"
+          provider={ PROVIDER_GOOGLE }
+          showsUserLocation={ true }
+          showsMyLocationButton={ true }
+          showsTraffic={ true }
+          customMapStyle={ Silver }
+          initialRegion={ this.props.region }
+          onRegionChange={ this.onRegionChange }
+          onPress={ this.clearMarkers }
+          onLongPress={ this.handleLongPress }
+          >
+            {this.props.route.length > 0 ? <MapView.Polyline coordinates={this.props.route} strokeWidth={5} strokeColor="#232223" /> : null}
+            {this.props.longPress.length > 0 ? <Marker animate={this.animate} routeCoords={this.routeCoords} coord={this.props.longPress[0]} /> : null }
+            { markers }
+        </MapView>
+        <View style={ styles.container }>
+          <Search animate={ this.animate }/>
+          <View style={ styles.overlay }>
+            <View style={ styles.overlaySize }>
+              <Text style={ styles.text }>lat: {this.props.region.latitude}</Text>
+              <Text style={ styles.text }>lng: {this.props.region.longitude}</Text>
             </View>
+          </View>
         </View>
+        <View style={styles.actionButton} >
+          <ActionButton buttonColor="#2f3030">
+            <ActionButton.Item buttonColor='#727272' title="Leaving" onPress={ this.saveLocation }>
+              <Icon name="md-create" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item style={styles.actionButtonText} buttonColor='#727272' title="Find Parking" onPress={ this.findParking }>
+              <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+          </ActionButton>
+        </View>
+      </View>
       )
     }
   }
@@ -129,7 +134,6 @@ const styles = StyleSheet.create({
     right: 0
   },
   map: {
-    // position: 'absolute',
     width: dims.width,
     height: dims.height,
     zIndex: -1
@@ -138,10 +142,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#2f3030',
     justifyContent: 'flex-end',
     alignSelf: 'center',
-    opacity: 0.5
-    // position: 'absolute',
-    // width: dims.width,
-    // bottom: (-1 * dims.height) + 100
+    opacity: 0.5,
+    marginTop: 37
   },
   text: {
     alignSelf: 'center',
@@ -154,22 +156,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  actionButtion: {
-    flex:1,
-    backgroundColor: '#f3f3f3',
+  actionButton: {
     position: 'absolute',
-    top: 500
-  },
-  test: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end'
+    bottom: 162,
+    right: 36
   },
   actionButtonIcon: {
     fontSize: 20,
     height: 22,
     color: 'white',
+  },
+  actionButtonText: {
+    position: 'absolute',
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: 3,
+    borderWidth: 0.5,
+    borderColor: '#eee',
+    backgroundColor: 'white',
+    height: 22,
+    top: 17,
+    right: 153,
+    shadowOpacity: 0.35,
+    shadowColor: '#000',
+    shadowRadius: 3,
+    elevation: 5
   }
 })
 
@@ -184,7 +195,8 @@ function mapStateToProps(state) {
     coords: state.loader.coords,
     route: state.loader.route,
     marker: state.loader.marker,
-    isLoading: state.loader.isLoading
+    isLoading: state.loader.isLoading,
+    longPress: state.loader.longPress
   }
 }
 

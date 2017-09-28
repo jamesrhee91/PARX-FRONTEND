@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import MapContainer from './components/MapContainer'
-import TestMap from './components/TestMap'
 import Directions from './components/Directions'
 import { AppRegistry, StyleSheet, Text, View, Dimensions } from 'react-native'
 import { createStore, combineReducers, applyMiddleware } from 'redux'

@@ -5,6 +5,7 @@ export function fetchLocation() {
     dispatch({ type: 'FETCHING_LOCATION' })
     navigator.geolocation.getCurrentPosition(pos => {
       dispatch({ type: 'FETCHED_LOCATION', payload: pos.coords })
+      dispatch({ type: 'CURRENT_LOCATION', payload: pos.coords })
     })
   }
 }
@@ -83,9 +84,9 @@ export function regionChange(region) {
   }
 }
 
-export function regionComplete(region) {
+export function currentLocation(region) {
   return {
-    type: 'COMPLETE',
+    type: 'CURRENT_LOCATION',
     payload: region
   }
 }
@@ -97,9 +98,12 @@ export function clearCoords() {
   }
 }
 
-export function clearRoute() {
+export function dispatchlongPress(coord) {
   return {
-    type: 'PATH',
-    payload: []
+    type: 'LONG_PRESS',
+    payload: [{
+      lat: coord.latitude,
+      lng: coord.longitude
+    }]
   }
 }

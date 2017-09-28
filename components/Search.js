@@ -12,16 +12,10 @@ class Search extends Component {
 
   handlePress = (details) => {
     const coords = { latitude: details.geometry.location.lat, longitude: details.geometry.location.lng }
-    this.props.regionComplete(coords)
+    this.props.currentLocation(coords)
     this.props.animate(coords, 1000)
   }
   render() {
-    // <SearchBar
-    //   round
-    //   onChangeText={ this.handleChange }
-    //   placeholder='Search...' />
-    const homePlace = { description: 'Home', geometry: { location: { lat: 40.763774, lng: -73.926112 } }};
-
     return (
       <GooglePlacesAutocomplete
       placeholder='Search'
@@ -51,11 +45,16 @@ class Search extends Component {
           borderBottomWidth:0
         },
         textInput: {
-          marginLeft: 0,
-          marginRight: 0,
-          height: 38,
+          marginTop: 25,
+          marginLeft: 9,
+          marginRight: 9,
+          height: 42,
           color: '#5d5d5d',
-          fontSize: 16
+          fontSize: 16,
+          shadowColor: 'black',
+          shadowOpacity: 0.8,
+          shadowRadius: 8,
+          borderRadius: 0
         },
         predefinedPlacesDescription: {
           color: '#1faadb'

@@ -24,6 +24,7 @@ export default function loadReducer(state = {
   userLoc: {},
   coords: [],
   route: [],
+  longPress: [],
   marker: null,
   isLoading: false
 }, action) {
@@ -55,7 +56,7 @@ export default function loadReducer(state = {
         },
         isLoading: false
       }
-    case 'COMPLETE':
+    case 'CURRENT_LOCATION':
       return { ...state,
         current: {
           latitude: action.payload.latitude,
@@ -75,11 +76,17 @@ export default function loadReducer(state = {
       }
     case 'CLEAR':
       return { ...state,
-        coords: action.payload
+        coords: action.payload,
+        route: action.payload,
+        longPress: action.payload
       }
     case 'PATH':
       return { ...state,
         route: action.payload
+      }
+    case 'LONG_PRESS':
+      return { ...state,
+        longPress: action.payload
       }
     case 'SAVED_LOCATION':
     default:
