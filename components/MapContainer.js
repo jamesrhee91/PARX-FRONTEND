@@ -8,11 +8,7 @@ import { connect } from 'react-redux'
 import { AppRegistry, StyleSheet, Text, View, Dimensions, Button } from 'react-native'
 import { bindActionCreators } from 'redux'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
-import ActionButton from 'react-native-action-button'
-import Icon from 'react-native-vector-icons/Ionicons'
-import LeavingButton from './LeavingButton'
-import FindButton from './FindButton'
-import ClearButton from './ClearButton'
+import ActionButtonContainer from './ActionButtonContainer'
 import Marker from './Marker'
 import Search from './Search'
 
@@ -27,55 +23,53 @@ class MapContainer extends Component {
   }
 
   saveLocation = () => {
-    this.props.sendData(this.props.current.latitude, this.props.current.longitude)
+    this.props.sendData(this.props.userLoc.latitude, this.props.userLoc.longitude)
   }
 
   findParking = () => {
-    this.props.getData(this.props.current)
+    this.props.getData(this.props.search)
   }
 
   clearMarkers = (e) => {
     if (!e.nativeEvent.action) {
       this.props.clearCoords()
+      this.props.clearPoint()
+      this.props.dispatchSearchMarker({})
     }
   }
 
   routeCoords = (e, coord) => {
-    const start = `${this.props.userLoc.lat}, ${this.props.userLoc.lng}`
+    const start = `${this.props.userLoc.latitude}, ${this.props.userLoc.longitude}`
     const dest = `${coord.lat}, ${coord.lng}`
     this.props.getDirections(start, dest)
     this.props.setRoute(coord)
+    this.props.clearPoint()
+    this.props.dispatchSearchMarker({})
   }
 
   animate = (coords, duration) => {
     this.refs.map.animateToCoordinate(coords, duration)
   }
+  searchAnimate = (coords, duration) => {
+    this.refs.map.animateToCoordinate(coords, duration)
+    this.props.dispatchSearchMarker(coords)
+  }
 
   handleLongPress = (e) => {
-    this.props.dispatchlongPress(e.nativeEvent.coordinate)
-    this.props.currentLocation(e.nativeEvent.coordinate)
+    this.props.dispatchLongPress(e.nativeEvent.coordinate)
+    this.props.searchLocation(e.nativeEvent.coordinate)
+    this.props.clearCoords()
+    this.props.dispatchSearchMarker({})
   }
 
   render() {
+    // const { navigate } = this.props.navigation
+
     if (this.props.isLoading){
       return (
         <View><Text>LOADING!!</Text></View>
       )
     } else {
-      // <MapView.Marker
-      //   key={idx}
-      //   coordinate={ {latitude: coord.lat, longitude: coord.lng, latitudeDelta: 0.0922, longitudeDelta: 0.0421} }
-      //   onPress={() => this.animate({latitude: coord.lat, longitude: coord.lng}, 1) }
-      //   >
-      //     <MapView.Callout onPress={() => this.routeCoords(null, coord) } >
-      //       <Text>Click to route here!</Text>
-      //     </MapView.Callout>
-      // </MapView.Marker>
-      // <View style={ styles.button }>
-      //   <LeavingButton saveLocation={ this.saveLocation } />
-      //   <FindButton findParking={ this.findParking } />
-      //   {this.props.coords.length > 0 ? <ClearButton style={ styles.clear } clearParking={ this.clearParking }/> : null}
-      // </View>
       const markers = this.props.coords.map((coord, idx) => {
         return (
           <Marker key={idx} animate={this.animate} routeCoords={this.routeCoords} coord={coord} />
@@ -97,33 +91,33 @@ class MapContainer extends Component {
           onLongPress={ this.handleLongPress }
           >
             {this.props.route.length > 0 ? <MapView.Polyline coordinates={this.props.route} strokeWidth={5} strokeColor="#232223" /> : null}
-            {this.props.longPress.length > 0 ? <Marker animate={this.animate} routeCoords={this.routeCoords} coord={this.props.longPress[0]} /> : null }
+
+            {this.props.longPress.latitude ? <MapView.Marker pinColor='#232223' coordinate={this.props.longPress} onPress={() => this.animate(this.props.longPress, 300)}></MapView.Marker> : null}
+
+            {this.props.searchMarker.latitude ? <MapView.Marker pinColor='#232223' coordinate={this.props.searchMarker} onPress={() => this.animate(this.props.searchMarker, 300)}></MapView.Marker> : null}
+
             { markers }
         </MapView>
-        <View style={ styles.container }>
-          <Search animate={ this.animate }/>
-          <View style={ styles.overlay }>
-            <View style={ styles.overlaySize }>
-              <Text style={ styles.text }>lat: {this.props.region.latitude}</Text>
-              <Text style={ styles.text }>lng: {this.props.region.longitude}</Text>
-            </View>
-          </View>
+        <View style={ styles.container }>          
+          <Search searchAnimate={ this.searchAnimate } onPress={() => navigate('Search')}/>
         </View>
-        <View style={styles.actionButton} >
-          <ActionButton buttonColor="#2f3030">
-            <ActionButton.Item buttonColor='#727272' title="Leaving" onPress={ this.saveLocation }>
-              <Icon name="md-create" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
-            <ActionButton.Item style={styles.actionButtonText} buttonColor='#727272' title="Find Parking" onPress={ this.findParking }>
-              <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
-          </ActionButton>
-        </View>
+        <ActionButtonContainer saveLocation={this.saveLocation} findParking={this.findParking} />
       </View>
       )
     }
   }
 }
+{/* <View style={ styles.textInput }>
+  <Button title="SEARCH" onPress={() => navigate('Search')}/>
+</View> */}
+
+{/* <View style={ styles.overlay }>
+  <View style={ styles.overlaySize }>
+    <Text style={ styles.text }>lat: {this.props.region.latitude}</Text>
+    <Text style={ styles.text }>lng: {this.props.region.longitude}</Text>
+  </View>
+</View> */}
+
 const dims = Dimensions.get('window')
 
 const styles = StyleSheet.create({
@@ -156,31 +150,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  actionButton: {
-    position: 'absolute',
-    bottom: 162,
-    right: 36
+  textInput: {
+    marginTop: 25,
+    marginLeft: 9,
+    marginRight: 9,
+    height: 42,
+    color: '#5d5d5d',
+    fontSize: 16,
+    shadowColor: 'black',
+    shadowOpacity: 0.8,
+    shadowRadius: 8,
+    borderRadius: 0,
   },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
-  },
-  actionButtonText: {
-    position: 'absolute',
-    paddingVertical: 3,
-    paddingHorizontal: 8,
-    borderRadius: 3,
-    borderWidth: 0.5,
-    borderColor: '#eee',
-    backgroundColor: 'white',
-    height: 22,
-    top: 17,
-    right: 153,
-    shadowOpacity: 0.35,
-    shadowColor: '#000',
-    shadowRadius: 3,
-    elevation: 5
+  textInputContainer: {
+    backgroundColor: 'rgba(0,0,0,0)',
+    borderTopWidth: 0,
+    borderBottomWidth:0,
+    height: 67
   }
 })
 
@@ -190,8 +176,9 @@ AppRegistry.registerComponent('MapContainer', () => MapContainer)
 function mapStateToProps(state) {
   return {
     region: state.loader.region,
-    current: state.loader.current,
+    search: state.loader.search,
     userLoc: state.loader.userLoc,
+    searchMarker: state.loader.searchMarker,
     coords: state.loader.coords,
     route: state.loader.route,
     marker: state.loader.marker,

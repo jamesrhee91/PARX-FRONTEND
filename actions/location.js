@@ -5,7 +5,7 @@ export function fetchLocation() {
     dispatch({ type: 'FETCHING_LOCATION' })
     navigator.geolocation.getCurrentPosition(pos => {
       dispatch({ type: 'FETCHED_LOCATION', payload: pos.coords })
-      dispatch({ type: 'CURRENT_LOCATION', payload: pos.coords })
+      dispatch({ type: 'SEARCH_LOCATION', payload: pos.coords })
     })
   }
 }
@@ -36,9 +36,6 @@ export function getData(coord) {
   return (dispatch) => {
     const lat = coord.latitude.toString().replace(/\./, '_')
     const lng = coord.longitude.toString().replace(/\./, '_')
-    // const temp = '40_705&-74_014'
-    // http://192.168.3.40:3000/api/v1/locations/${temp}
-    console.log("CURRENT LOCATION", coord);
     fetch(`http://localhost:3000/api/v1/locations/${lat}&${lng}`)
       .then(res => res.json())
       .then(coords => {
@@ -84,26 +81,40 @@ export function regionChange(region) {
   }
 }
 
-export function currentLocation(region) {
+export function searchLocation(region) {
   return {
-    type: 'CURRENT_LOCATION',
+    type: 'SEARCH_LOCATION',
     payload: region
   }
 }
 
 export function clearCoords() {
   return {
-    type: 'CLEAR',
+    type: 'CLEAR_COORDS',
     payload: []
   }
 }
 
-export function dispatchlongPress(coord) {
+export function clearPoint() {
+  return {
+    type: 'CLEAR_POINT',
+    payload: {}
+  }
+}
+
+export function dispatchLongPress(coord) {
   return {
     type: 'LONG_PRESS',
-    payload: [{
-      lat: coord.latitude,
-      lng: coord.longitude
-    }]
+    payload: {
+      latitude: coord.latitude,
+      longitude: coord.longitude
+    }
+  }
+}
+
+export function dispatchSearchMarker(coord) {
+  return {
+    type: 'SEARCH_MARKER',
+    payload: coord
   }
 }

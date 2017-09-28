@@ -7,21 +7,17 @@ const ASPECT_RATIO = dims.width / dims.height
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 // const LONGITUDE_DELTA = 0.0421
-
+const DEFAULT_STATE = {
+  latitude: 40.764326,
+  longitude: -73.925683,
+  latitudeDelta: LATITUDE_DELTA,
+  longitudeDelta: LONGITUDE_DELTA
+}
 export default function loadReducer(state = {
-  region: {
-    latitude: 40.764326,
-    longitude: -73.925683,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA
-  },
-  current: {
-    latitude: 40.764326,
-    longitude: -73.925683,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA
-  },
+  region: DEFAULT_STATE,
+  search: DEFAULT_STATE,
   userLoc: {},
+  searchMarker: {},
   coords: [],
   route: [],
   longPress: [],
@@ -32,37 +28,33 @@ export default function loadReducer(state = {
     case 'FETCHING_LOCATION':
       return { ...state, isLoading: true }
     case 'FETCHED_LOCATION':
-    console.log('FETCHED', action.payload);
       return { ...state,
         region: {
+          ...state.region,
           latitude: action.payload.latitude,
-          longitude: action.payload.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA
+          longitude: action.payload.longitude
         },
         userLoc: {
-          lat: action.payload.latitude,
-          lng: action.payload.longitude
+          latitude: action.payload.latitude,
+          longitude: action.payload.longitude
         },
         isLoading: false
       }
     case 'CHANGING':
       return { ...state,
         region: {
+          ...state.region,
           latitude: action.payload.latitude,
-          longitude: action.payload.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA
+          longitude: action.payload.longitude
         },
         isLoading: false
       }
-    case 'CURRENT_LOCATION':
+    case 'SEARCH_LOCATION':
       return { ...state,
-        current: {
+        search: {
+          ...state.search,
           latitude: action.payload.latitude,
-          longitude: action.payload.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA
+          longitude: action.payload.longitude
         },
         isLoading: false
       }
@@ -74,10 +66,13 @@ export default function loadReducer(state = {
       return { ...state,
         coords: action.payload
       }
-    case 'CLEAR':
+    case 'CLEAR_COORDS':
       return { ...state,
         coords: action.payload,
-        route: action.payload,
+        route: action.payload
+      }
+    case 'CLEAR_POINT':
+      return { ...state,
         longPress: action.payload
       }
     case 'PATH':
@@ -87,6 +82,10 @@ export default function loadReducer(state = {
     case 'LONG_PRESS':
       return { ...state,
         longPress: action.payload
+      }
+    case 'SEARCH_MARKER':
+      return { ...state,
+        searchMarker: action.payload
       }
     case 'SAVED_LOCATION':
     default:
