@@ -7,10 +7,10 @@ import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons'
 import * as locationActions from '../actions/location'
 
-
 class Search extends Component {
 
   handlePress = (details) => {
+    console.log("DETAILS", details);
     const coords = { latitude: details.geometry.location.lat, longitude: details.geometry.location.lng }
     this.props.searchLocation(coords)
     this.props.searchAnimate(coords, 1000)
@@ -24,7 +24,7 @@ class Search extends Component {
       <View style={ styles.container }>
         <View style={ styles.searchBar }>
           <View>
-            <Icon onPress={() => console.log("HITTING BACK ARROW")} size={29} name="md-arrow-back" style={ styles.icon } />
+            <Icon onPress={() => console.log("BACK ARROW PRESSED")} size={29} name="md-arrow-back" style={ styles.icon } />
           </View>
           <GooglePlacesAutocomplete
             placeholder='Enter Location'

@@ -82,12 +82,12 @@ class MapContainer extends Component {
           <Marker key={idx} animate={this.animate} routeCoords={this.routeCoords} coord={coord} />
         )
       })
-      var drawerContent = (<View style={styles.drawerContent}>
-        <View style={styles.leftTop}/>
-          <View style={styles.leftBottom}>
-            <View style={{backgroundColor: 'white', height: '100%'}}><Text>Drawer Content</Text></View>
+      var drawerContent = (
+        <View style={styles.drawerContent}>
+          <View style={styles.menuContent}>
+            <Text>Drawer Content</Text>
           </View>
-        </View>);
+        </View>)
       // customize drawer's style (Optional)
       var customStyles = {
         drawer: {
@@ -145,7 +145,7 @@ class MapContainer extends Component {
             </View>
             <ActionButtonContainer saveLocation={this.saveLocation} findParking={this.findParking} />
           </View>
-      </Drawer>
+        </Drawer>
       )
     }
   }
@@ -221,8 +221,9 @@ const styles = StyleSheet.create({
     paddingBottom: 7,
     paddingTop: 9
   },
-  leftTop: {
-    backgroundColor: 'white'
+  menuContent: {
+    backgroundColor: 'white',
+    height: '100%'
   }
 })
 
