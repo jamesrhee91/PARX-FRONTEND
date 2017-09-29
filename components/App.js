@@ -6,7 +6,7 @@ import Search from './Search'
 
 const App = StackNavigator({
   Map: { screen: MapContainer, navigationOptions: { header: null }},
-  Search: { screen: Search }
+  Search: { screen: Search, navigationOptions: { header: null }}
 })
 
 export default App

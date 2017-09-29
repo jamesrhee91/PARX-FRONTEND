@@ -16,8 +16,8 @@ export default class Parx extends Component {
   render() {
     return (
       <Provider store={ store } >
-        {/* <App /> */}
-        <MapContainer />
+        <App />
+        {/* <MapContainer /> */}
       </Provider>
     );
   }
