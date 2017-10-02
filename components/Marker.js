@@ -20,7 +20,7 @@ const Marker = ({ animate, coord, routeCoords }) => {
       onPress={ () => handleMarkerPress(coord) }
       >
       <MapView.Callout onPress={ () => handleCalloutPress(coord) } >
-        <Text>Click to route here!</Text>
+        <Text onPress={() => console.o}>Click to route here!</Text>
       </MapView.Callout>
     </MapView.Marker>
   )

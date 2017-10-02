@@ -5,14 +5,16 @@ import Night from '../mapStyles/Night.json'
 import Retro from '../mapStyles/Retro.json'
 import * as locationActions from '../actions/location'
 import { connect } from 'react-redux'
-import { AppRegistry, StyleSheet, Text, View, Dimensions, Button, Easing } from 'react-native'
+import { AppRegistry, StyleSheet, Text, View, Dimensions, Button, Easing, TouchableOpacity, Image } from 'react-native'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import { bindActionCreators } from 'redux'
-import Icon from 'react-native-vector-icons/Ionicons'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import Icon from 'react-native-vector-icons/Ionicons'
 import Drawer from 'react-native-drawer-menu'
 import ActionButtonContainer from './ActionButtonContainer'
 import Marker from './Marker'
-import Search from './Search'
+import CurrentLocationButton from './CurrentLocationButton'
+import styles from '../styleSheet/styles'
 
 
 class MapContainer extends Component {
@@ -38,6 +40,7 @@ class MapContainer extends Component {
       this.props.clearCoords()
       this.props.clearPoint()
       this.props.dispatchSearchMarker({})
+      this.refs.search._onBlur()
     }
   }
 
@@ -58,6 +61,15 @@ class MapContainer extends Component {
     this.props.dispatchSearchMarker(coords)
   }
 
+  openMenu = () => {
+    this.refs.drawer.openLeftDrawer()
+  }
+
+  currentLocation = () => {
+    // this.props.fetchLocation()
+    console.log("CURRENT LOCATION");
+  }
+
   handleLongPress = (e) => {
     this.props.dispatchLongPress(e.nativeEvent.coordinate)
     this.props.searchLocation(e.nativeEvent.coordinate)
@@ -65,16 +77,21 @@ class MapContainer extends Component {
     this.props.dispatchSearchMarker({})
   }
 
-  openMenu = () => {
-    this.refs.drawer.openLeftDrawer()
+  handleSearch = (details) => {
+    const coords = { latitude: details.geometry.location.lat, longitude: details.geometry.location.lng }
+    this.searchAnimate(coords, 1000)
+    this.props.searchLocation(coords)
+    this.props.clearCoords()
+    this.props.clearPoint()
   }
 
   render() {
-    const { navigate } = this.props.navigation
-
+    // const { navigate } = this.props.navigation
     if (this.props.isLoading){
       return (
-        <View><Text>LOADING!!</Text></View>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'gray' }}>
+          <Text>LOADING!!</Text>
+        </View>
       )
     } else {
       const markers = this.props.coords.map((coord, idx) => {
@@ -82,12 +99,80 @@ class MapContainer extends Component {
           <Marker key={idx} animate={this.animate} routeCoords={this.routeCoords} coord={coord} />
         )
       })
-      var drawerContent = (<View style={styles.drawerContent}>
-        <View style={styles.leftTop}/>
-          <View style={styles.leftBottom}>
-            <View style={{backgroundColor: 'white', height: '100%'}}><Text>Drawer Content</Text></View>
+      let drawerContent = (
+        <View style={{backgroundColor: 'white', height: '100%'}}>
+
+          {/* view for username */}
+          <View style={ styles.drawerProfileView }>
+            <View style={ styles.drawerLogo }>
+              <Text style={ styles.drawerLogoText }>P A R X</Text>
+            </View>
+
+            <View style={ styles.drawerPicView }>
+              <Image source={require('../assets/image/auggie.png')} style={ styles.drawerPic } />
+            </View>
+            <View style={ styles.drawerEmailView }>
+              <Text style={ styles.drawerEmailText }>
+                james.rhee@flatironschool.com
+              </Text>
+            </View>
           </View>
-        </View>);
+
+          {/* view for option 1 */}
+          <TouchableOpacity onPress={() => console.log("RECENT WAS PRESSED")} style={ styles.drawerOptionCont }>
+            <View style={ styles.drawerOptionView }>
+              <Icon size={22} name="ios-download" />
+            </View>
+            <Text style={ styles.drawerOptionText }>Recent</Text>
+          </TouchableOpacity>
+
+          {/* view for option 2 */}
+          <TouchableOpacity onPress={() => console.log("PLACES WAS PRESSED")} style={ styles.drawerOptionCont }>
+            <View style={ styles.drawerOptionView }>
+              <Icon size={22} name="md-pin" />
+            </View>
+            <Text style={ styles.drawerOptionText }>Your places</Text>
+          </TouchableOpacity>
+
+          {/* view for option 3 */}
+          <TouchableOpacity onPress={() => console.log("EDIT WAS PRESSED")} style={ styles.drawerOptionCont }>
+            <View style={ styles.drawerOptionView }>
+              <Icon size={22} name="ios-create" />
+            </View>
+            <Text style={ styles.drawerOptionText }>Edit profile</Text>
+          </TouchableOpacity>
+
+          <View style={ styles.drawerLines }></View>
+
+          <View style={ styles.drawerMenuCont }>
+            <View style={ styles.drawerMenuView }>
+              <TouchableOpacity onPress={() => console.log("SETTINGS WAS PRESSED")} style={ styles.drawerMenuTouch }>
+                <Text style={ styles.drawerMenuText }>
+                  Settings
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => console.log("LOGOUT WAS PRESSED")} style={ styles.drawerMenuTouch }>
+                <Text style={ styles.drawerMenuText }>
+                  Logout
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={ styles.drawerLines }></View>
+
+          <View>
+            <View style={ styles.drawerTierView }>
+              <Text style={ styles.drawerTierTitle }>Tier: </Text>
+              <Text style={ styles.drawerTierDesc }>Platinum</Text>
+            </View>
+            <View style={ styles.drawerTierView }>
+              <Text style={ styles.drawerTierTitle }>Karma: </Text>
+              <Text style={ styles.drawerTierDesc }>3754</Text>
+            </View>
+          </View>
+        </View>
+      )
       // customize drawer's style (Optional)
       var customStyles = {
         drawer: {
@@ -101,29 +186,29 @@ class MapContainer extends Component {
       return(
         <Drawer
           ref="drawer"
-          style={styles.container}
-          drawerWidth={300}
+          drawerWidth={270}
           drawerContent={drawerContent}
           type={Drawer.types.Overlay}
-          customStyles={{drawer: styles.drawer}}
+          customStyles={{drawer: customStyles.drawer}}
           drawerPosition={Drawer.positions.Left}
           onDrawerOpen={() => {console.log('Drawer is opened');}}
           onDrawerClose={() => {console.log('Drawer is closed')}}
           easingFunc={Easing.ease}
         >
-          <View>
+
             <MapView
               style={ styles.map }
               ref="map"
               provider={ PROVIDER_GOOGLE }
               showsUserLocation={ true }
-              showsMyLocationButton={ true }
-              showsTraffic={ true }
+              showsMyLocationButton={ false }
+              showsTraffic={ false }
               customMapStyle={ Silver }
               initialRegion={ this.props.region }
               onRegionChange={ this.onRegionChange }
               onPress={ this.clearMarkers }
               onLongPress={ this.handleLongPress }
+              onFocus={() => console.log("FOCUSING")}
               >
                 {this.props.route.length > 0 ? <MapView.Polyline coordinates={this.props.route} strokeWidth={5} strokeColor="#232223" /> : null}
 
@@ -135,17 +220,49 @@ class MapContainer extends Component {
             </MapView>
             <View style={ styles.container }>
               <View style={ styles.searchBar }>
+                <GooglePlacesAutocomplete
+                  ref='search'
+                  placeholder='Enter Location'
+                  minLength={3}
+                  autoFocus={false}
+                  listViewDisplayed='auto'
+                  fetchDetails={true}
+                  renderDescription={row => row.description}
+                  onPress={(data, details = null) => {
+                    this.handleSearch(details)
+                  }}
+                  query={{
+                    key: 'AIzaSyB-cZIUj0WhKunsFb-hL_D_BRcDpi_ENlg',
+                    language: 'en'
+                  }}
+                  styles={{
+                    textInputContainer: styles.textInputContainer,
+                    textInput: styles.textInput,
+                    listView: styles.listView
+                  }}
+                  nearbyPlacesAPI='GoogleReverseGeocoding'
+                  debounce={200}
+                  renderLeftButton={() => {
+                    return (
+                      <TouchableOpacity onPress={ this.openMenu }>
+                        <Icon size={29} name="ios-menu-outline" style={ styles.icon } />
+                      </TouchableOpacity>
+                  )}}
+                />
+              </View>
+              {/* <Search searchAnimate={ this.searchAnimate } openMenu={ this.openMenu } /> */}
+              {/* <View style={ styles.searchBar }>
                 <View style={ styles.menu }>
                   <Icon onPress={ this.openMenu } size={29} name="ios-menu-outline" style={ styles.icon } />
                 </View>
                 <View style={ styles.textContainer }>
                   <Text style={ styles.textInput } onPress={() => navigate('Search')}>Enter Location</Text>
                 </View>
-              </View>
+              </View> */}
+              <CurrentLocationButton currentLocation={ this.currentLocation } />
             </View>
             <ActionButtonContainer saveLocation={this.saveLocation} findParking={this.findParking} />
-          </View>
-      </Drawer>
+        </Drawer>
       )
     }
   }
@@ -157,74 +274,6 @@ class MapContainer extends Component {
     <Text style={ styles.text }>lng: {this.props.region.longitude}</Text>
   </View>
 </View> */}
-
-const dims = Dimensions.get('window')
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0
-  },
-  map: {
-    width: dims.width,
-    height: dims.height,
-    zIndex: -1
-  },
-  overlay: {
-    backgroundColor: '#2f3030',
-    justifyContent: 'flex-end',
-    alignSelf: 'center',
-    opacity: 0.5,
-    marginTop: 37
-  },
-  text: {
-    alignSelf: 'center',
-    color: 'white'
-  },
-  overlaySize: {
-    width: dims.width/2
-  },
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  searchBar: {
-    flex: 1,
-    flexDirection: 'row',
-    marginTop: 33,
-    marginLeft: 9,
-    marginRight: 9,
-    shadowColor: 'black',
-    shadowOpacity: 0.8,
-    shadowRadius: 8,
-    backgroundColor: 'white'
-  },
-  menu: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '15%'
-  },
-  textInput: {
-    color: '#a8a8a8',
-    fontSize: 15,
-    padding: 15
-  },
-  textContainer: {
-    width: '85%'
-  },
-  icon: {
-    paddingLeft: 22,
-    paddingRight:10,
-    paddingBottom: 7,
-    paddingTop: 9
-  },
-  leftTop: {
-    backgroundColor: 'white'
-  }
-})
 
 AppRegistry.registerComponent('MapContainer', () => MapContainer)
 

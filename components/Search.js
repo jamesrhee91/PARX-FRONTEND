@@ -12,24 +12,32 @@ class Search extends Component {
 
   handlePress = (details) => {
     const coords = { latitude: details.geometry.location.lat, longitude: details.geometry.location.lng }
-    this.props.searchLocation(coords)
-    this.props.searchAnimate(coords, 1000)
-    this.props.clearCoords()
-    this.props.clearPoint()
+    console.log("PRESSING")
+    // this.props.searchLocation(coords)
+    // this.props.searchAnimate(coords, 1000)
+    // this.props.clearCoords()
+    // this.props.clearPoint()
+  }
+
+  handleBlur = () => {
+    console.log("HANDLEBLUR", this.refs)
+    this.refs.search.triggerBlur()
   }
 
   render() {
-    const {navigate} = this.props.navigation
+    // const {navigate} = this.props.navigation
+    console.log(this.refs);
     return (
       <View style={ styles.container }>
         <View style={ styles.searchBar }>
-          <View>
+          {/* <View>
             <Icon onPress={() => console.log("HITTING BACK ARROW")} size={29} name="md-arrow-back" style={ styles.icon } />
-          </View>
+          </View> */}
           <GooglePlacesAutocomplete
+            getDefaultValue={() => 'HE'}
             placeholder='Enter Location'
             minLength={3}
-            autoFocus={true}
+            autoFocus={false}
             listViewDisplayed='auto'
             fetchDetails={true}
             renderDescription={row => row.description}
@@ -40,15 +48,14 @@ class Search extends Component {
               key: 'AIzaSyB-cZIUj0WhKunsFb-hL_D_BRcDpi_ENlg',
               language: 'en'
             }}
-
             styles={{
               textInputContainer: styles.textInputContainer,
               textInput: styles.textInput,
               listView: styles.listView
             }}
-
             nearbyPlacesAPI='GoogleReverseGeocoding'
             debounce={200}
+            renderLeftButton={() => <Icon onPress={ this.props.openMenu } size={29} name="ios-menu-outline" style={ styles.icon } />}
           />
         </View>
       </View>
@@ -85,8 +92,8 @@ const styles = StyleSheet.create({
   },
   listView: {
     position: 'absolute',
-    top: 49,
-    left: -51,
+    top: 45,
+    left: 1,
     right: 1,
     backgroundColor: 'white',
     opacity: 0.8
