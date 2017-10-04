@@ -87,7 +87,10 @@ class MapContainer extends Component {
   }
 
   handleRecent = () => {
+    this.refs.drawer.closeDrawer()
     this.props.recentlySaved()
+    const {navigate} = this.props.navigation
+    navigate('Recent')
   }
 
   handlePlaces = () => {

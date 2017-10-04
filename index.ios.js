@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import MapContainer from './components/MapContainer'
+import App from './components/App'
 import loadReducer from './reducers/loadReducer'
 
 const rootReducer = combineReducers({loader: loadReducer})
@@ -15,7 +16,8 @@ export default class Parx extends Component {
   render() {
     return (
       <Provider store={ store } >
-        <MapContainer />
+        <App />
+        {/* <MapContainer /> */}
       </Provider>
     );
   }

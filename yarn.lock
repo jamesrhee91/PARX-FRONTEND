@@ -3860,6 +3860,10 @@ react-native-spinkit@^1.0.2:
   dependencies:
     prop-types "^15.5.8"
 
+react-native-swipe-list-view@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-list-view/-/react-native-swipe-list-view-0.4.1.tgz#f4b0288e090fc86f743bc30b45df829de729bcd7"
+
 react-native-tab-navigator@^0.3.4:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/react-native-tab-navigator/-/react-native-tab-navigator-0.3.4.tgz#54a18f1ad06a09d4a0de81ff00416bc1b760c960"

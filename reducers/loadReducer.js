@@ -21,6 +21,7 @@ export default function loadReducer(state = {
   coords: [],
   route: [],
   longPress: [],
+  locations: [],
   marker: null,
   isLoading: false
 }, action) {
@@ -86,6 +87,15 @@ export default function loadReducer(state = {
     case 'SEARCH_MARKER':
       return { ...state,
         searchMarker: action.payload
+      }
+    case 'LIST':
+      return { ...state,
+        locations: action.payload
+      }
+    case 'UPDATED_LIST':
+      let newLocations = state.locations.filter(location => location.id != action.payload)
+      return { ...state,
+        locations: newLocations
       }
     case 'SAVED_LOCATION':
     default:

@@ -210,6 +210,33 @@ const styles = StyleSheet.create({
   },
   drawerTierDesc: {
     fontSize: 16
+  },
+  deleteView: {
+    backgroundColor: 'red',
+    height: 70,
+    width: '100%',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    shadowOpacity: 0.35,
+    shadowOffset: { "width": 0, "height": 5 },
+    shadowColor: '#000',
+    shadowRadius: 3
+  },
+  deleteTrash: {
+    marginRight: 26,
+    color: 'white'
+  },
+  listContent: {
+    height: 70,
+    width: '100%',
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+    shadowOpacity: 0.35,
+    shadowOffset: { "width": 0, "height": 5 },
+    shadowColor: '#000',
+    shadowRadius: 3
   }
 })
 
