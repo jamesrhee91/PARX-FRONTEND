@@ -1,3 +1,4 @@
+import { Alert } from 'react-native'
 import Polyline from '@mapbox/polyline';
 
 export function fetchLocation() {
@@ -19,16 +20,23 @@ export function sendData(lat, lon) {
    },
     body: JSON.stringify({
       location: {
-        lon: Number((lon).toFixed(4)),
-        lat: Number((lat).toFixed(4))
+        lon: lon,
+        lat: lat
       }
     })
   }
-  return (dispatch)=>{
-     fetch('http://192.168.3.40:3000/api/v1/locations', data)
-    .then(res => res.json())
-    .then(json => dispatch({type: 'SAVED_LOCATION'}))
-    .catch(error => console.log("Error at sendData", error))
+  return (dispatch) => {
+    fetch('http://192.168.3.40:3000/api/v1/locations', data)
+      .then(res => res.json())
+      .then(response => {
+        if (response.success) {
+          dispatch({type: 'SAVED_LOCATION'})
+          Alert.alert("Thank you for contributing!", "Parking has been saved")
+        } else {
+          Alert.alert("An error occured", "Please try again")
+        }
+      })
+      .catch(error => console.log("Error at sendData", error))
   }
 }
 
@@ -36,11 +44,12 @@ export function getData(coord) {
   return (dispatch) => {
     const lat = coord.latitude.toString().replace(/\./, '_')
     const lng = coord.longitude.toString().replace(/\./, '_')
-    fetch(`http://localhost:3000/api/v1/locations/${lat}&${lng}`)
+    fetch(`http://192.168.3.40:3000/api/v1/locations/${lat}&${lng}`)
       .then(res => res.json())
       .then(coords => {
         if (coords.empty) {
           dispatch({ type: 'FETCHED_COORDS', payload: coords.empty })
+          Alert.alert("Sorry!", "There are no parking available in that area")
         } else {
           dispatch({ type: 'FETCHED_COORDS', payload: coords.locations })
         }
@@ -116,5 +125,14 @@ export function dispatchSearchMarker(coord) {
   return {
     type: 'SEARCH_MARKER',
     payload: coord
+  }
+}
+
+export function recentlySaved() {
+  return (dispatch) => {
+    fetch(`http://192.168.3.40:3000/api/v1/users/1`)
+      .then(res => res.json())
+      .then(locations => console.log("RESPONSE:", locations))
+      .catch(error => console.log("Error at recentlySaved", error))
   }
 }

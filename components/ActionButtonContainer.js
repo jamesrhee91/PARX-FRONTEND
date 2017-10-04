@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, Text, View, Button } from 'react-native'
 import ActionButton from 'react-native-action-button'
 import Icon from 'react-native-vector-icons/Ionicons'
-
+import styles from '../styleSheet/styles'
 
 
 const ActionButtonContainer = ({ saveLocation, findParking }) => {
@@ -30,19 +30,6 @@ const ActionButtonContainer = ({ saveLocation, findParking }) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  actionButton: {
-    position: 'relative',
-    bottom: 162,
-    right: -20
-  },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
-  }
-})
 
 
 export default ActionButtonContainer

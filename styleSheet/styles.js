@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     right: 0
   },
   map: {
+    position: 'absolute',
     width: dims.width,
     height: dims.height,
     zIndex: -1
@@ -33,15 +34,24 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   searchBar: {
-    flex: 1,
-    flexDirection: 'row',
+    height: 60,
+    width: '95%',
+    alignSelf: 'center',
     marginTop: 33,
-    marginLeft: 9,
-    marginRight: 9,
     shadowColor: 'black',
     shadowOpacity: 0.8,
     shadowRadius: 8,
     backgroundColor: 'white'
+  },
+  actionButton: {
+    position: 'relative',
+    bottom: -355,
+    right: -20
+  },
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
   },
   menu: {
     flex: 1,
@@ -50,38 +60,56 @@ const styles = StyleSheet.create({
     width: '15%'
   },
   textInputContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0)',
     borderTopWidth: 0,
     borderBottomWidth:0,
-    borderRadius: 0,
-    flex: 1
+    borderRadius: 0
   },
   textInput: {
     color: '#a8a8a8',
+    height: '100%',
     fontSize: 15,
-    paddingLeft: 0,
+    paddingLeft: 10,
     paddingRight: 0,
     paddingTop: 0,
     paddingBottom: 0,
-    marginTop: 9,
-    marginLeft: 11,
-    marginBottom: 10,
-    padding: 15,
-    alignSelf: 'center'
+    marginTop: 0,
+    marginLeft: 0,
+    marginBottom: 0,
+    marginRight: 0,
+    fontFamily: 'Exo-Medium'
+  },
+  currentButton: {
+    position: 'relative',
+    bottom: -508,
+    right: -309,
+    height: 56,
+    width: 56,
+    backgroundColor: '#f7f7f7',
+    borderRadius: 28,
+    shadowOpacity: 0.35,
+    shadowOffset: { "width": 0, "height": 5 },
+    shadowColor: '#000',
+    shadowRadius: 3,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   listView: {
     position: 'absolute',
-    top: 45,
+    top: 61,
     left: 1,
     right: 1,
     backgroundColor: 'white',
     opacity: 0.8
   },
-  icon: {
+  menuIcon: {
     paddingLeft: 22,
     paddingRight:12,
-    paddingBottom: 7,
-    paddingTop: 7
+    paddingBottom: 14,
+    paddingTop: 14
   },
   leftTop: {
     backgroundColor: 'white'
@@ -90,7 +118,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     borderBottomWidth: 1,
-    marginBottom: 10
+    marginBottom: 5
   },
   drawerLogo: {
     marginTop: 25,
@@ -98,7 +126,7 @@ const styles = StyleSheet.create({
   },
   drawerLogoText: {
     fontSize: 25,
-    fontWeight: 'bold'
+    fontFamily: 'ArchivoBlack-Regular'
   },
   drawerPicView: {
     alignSelf: 'center',
@@ -107,6 +135,7 @@ const styles = StyleSheet.create({
     height: 120
   },
   drawerPic: {
+    alignSelf: 'center',
     width: '100%',
     height: '100%',
     borderRadius: 60
@@ -137,15 +166,16 @@ const styles = StyleSheet.create({
   },
   drawerOptionText: {
     fontSize: 22,
-    fontWeight: 'bold',
-    paddingLeft: 15
+    paddingLeft: 15,
+    fontWeight: 'bold'
   },
   drawerLines: {
     alignSelf: 'center',
     backgroundColor: '#a8a8a8',
     height: 1,
     width: '85%',
-    marginTop: 10
+    marginTop: 5,
+    marginBottom: 5
   },
   drawerMenuCont: {
     height: 100,
@@ -154,8 +184,7 @@ const styles = StyleSheet.create({
   },
   drawerMenuView: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start'
+    flexDirection: 'column'
   },
   drawerMenuTouch: {
     flex: 1,

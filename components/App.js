@@ -3,9 +3,10 @@ import { AppRegistry, Text } from 'react-native'
 import { StackNavigator } from 'react-navigation'
 import MapContainer from './MapContainer'
 import Search from './Search'
+import SavedLocations from './SavedLocations'
 
 const App = StackNavigator({
-  Map: { screen: MapContainer, navigationOptions: { header: null }},
+  Recent: { screen: SavedLocations },
   Search: { screen: Search, navigationOptions: { header: null }}
 })
 
