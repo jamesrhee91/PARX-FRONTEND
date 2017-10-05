@@ -216,7 +216,7 @@ class MapContainer extends Component {
             provider={ PROVIDER_GOOGLE }
             showsUserLocation={ true }
             showsMyLocationButton={ false }
-            showsTraffic={ false }
+            showsTraffic={ true }
             customMapStyle={ Silver }
             initialRegion={ this.props.region }
             onRegionChange={ this.onRegionChange }

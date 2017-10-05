@@ -32,6 +32,8 @@ export function sendData(lat, lon) {
         if (response.success) {
           dispatch({type: 'SAVED_LOCATION'})
           Alert.alert("Thank you for contributing!", "Parking has been saved")
+        } else if (response.exists) {
+          Alert.alert("Location", "Parking space was previously saved")
         } else {
           Alert.alert("An error occured", "Please try again")
         }
