@@ -26,7 +26,7 @@ export function sendData(lat, lon) {
     })
   }
   return (dispatch) => {
-    fetch('http://192.168.3.40:3000/api/v1/locations', data)
+    fetch('https://parx-api.herokuapp.com/api/v1/locations', data)
       .then(res => res.json())
       .then(response => {
         if (response.success) {
@@ -44,9 +44,11 @@ export function getData(coord) {
   return (dispatch) => {
     const lat = coord.latitude.toString().replace(/\./, '_')
     const lng = coord.longitude.toString().replace(/\./, '_')
-    fetch(`http://192.168.3.40:3000/api/v1/locations/${lat}&${lng}`)
+    console.log("MY DATA", coord);
+    fetch(`https://parx-api.herokuapp.com/api/v1/locations/${lat}&${lng}`)
       .then(res => res.json())
       .then(coords => {
+        console.log("THIS IS COORDS", coords);
         if (coords.empty) {
           dispatch({ type: 'FETCHED_COORDS', payload: coords.empty })
           Alert.alert("Sorry!", "There are no parking available in that area")
@@ -130,7 +132,7 @@ export function dispatchSearchMarker(coord) {
 
 export function recentlySaved() {
   return (dispatch) => {
-    fetch(`http://192.168.3.40:3000/api/v1/users/1`)
+    fetch(`https://parx-api.herokuapp.com/api/v1/users/1`)
       .then(res => res.json())
       .then(locs => {
         dispatch({ type: 'LIST', payload: locs.locations })

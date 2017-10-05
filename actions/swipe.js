@@ -7,7 +7,7 @@ export function deleteLocation(id) {
         'Accept': "application/json"
       }
     }
-    fetch(`http://192.168.3.40:3000/api/v1/locations/${id}`, data)
+    fetch(`https://parx-api.herokuapp.com/api/v1/locations/${id}`, data)
       .then(res => res.json())
       .then(response => {
         if (response.success) {
