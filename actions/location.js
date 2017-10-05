@@ -133,7 +133,6 @@ export function recentlySaved() {
     fetch(`http://192.168.3.40:3000/api/v1/users/1`)
       .then(res => res.json())
       .then(locs => {
-        console.log("RESPONSE:", locs.locations)
         dispatch({ type: 'LIST', payload: locs.locations })
       })
       .catch(error => console.log("Error at recentlySaved", error))

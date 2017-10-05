@@ -10,7 +10,6 @@ export function deleteLocation(id) {
     fetch(`http://192.168.3.40:3000/api/v1/locations/${id}`, data)
       .then(res => res.json())
       .then(response => {
-        console.log("RESPONSE:", response.success)
         if (response.success) {
           dispatch({ type: 'UPDATED_LIST', payload: id })
         } else {

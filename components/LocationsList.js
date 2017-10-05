@@ -10,7 +10,6 @@ import Location from './Location'
 class LocationsList extends Component {
 
     render() {
-      console.log("state", this.props.locations);
       return (
         <FlatList data={this.props.locations} renderItem={(loc, idx) => <Location key={idx} location={loc.item} /> } />
       )

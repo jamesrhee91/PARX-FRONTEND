@@ -8,12 +8,10 @@ import styles from '../styleSheet/styles'
 const ActionButtonContainer = ({ saveLocation, findParking }) => {
 
   const handleLeaving = () => {
-    console.log("LEAVING WAS PRESSED");
     saveLocation()
   }
 
   const handleFind = () => {
-    console.log("FIND PARKING WAS PRESSED");
     findParking()
   }
 

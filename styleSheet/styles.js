@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   actionButtonIcon: {
     fontSize: 20,
     height: 22,
-    color: 'white',
+    color: 'white'
   },
   menu: {
     flex: 1,
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   deleteView: {
-    backgroundColor: 'red',
+    backgroundColor: '#c1090d',
     height: 70,
     width: '100%',
     alignItems: 'flex-end',

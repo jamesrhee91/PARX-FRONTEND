@@ -8,6 +8,8 @@ import MapContainer from './components/MapContainer'
 import App from './components/App'
 import loadReducer from './reducers/loadReducer'
 
+console.disableYellowBox = true;
+
 const rootReducer = combineReducers({loader: loadReducer})
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))

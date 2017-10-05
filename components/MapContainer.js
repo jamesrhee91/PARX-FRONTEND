@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Dimensions, Easing, TouchableOpacity, Image } from 'react-native'
+import { Text, View, Dimensions, Easing, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
@@ -104,8 +104,8 @@ class MapContainer extends Component {
   render() {
     if (this.props.isLoading){
       return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'gray' }}>
-          <Text>Loading...</Text>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontFamily: 'ArchivoBlack-Regular', color: 'black' }}>Loading...</Text>
         </View>
       )
     } else {
@@ -133,48 +133,49 @@ class MapContainer extends Component {
             </View>
           </View>
 
-          {/* view for option 1 */}
-          <TouchableOpacity onPress={ this.handleRecent } style={ styles.drawerOptionCont }>
-            <View style={ styles.drawerOptionView }>
-              <Icon size={22} name="ios-download" />
+          <ScrollView>
+            {/* view for option 1 */}
+            <TouchableOpacity onPress={ this.handleRecent } style={ styles.drawerOptionCont }>
+              <View style={ styles.drawerOptionView }>
+                <Icon size={22} name="ios-download" />
+              </View>
+              <Text style={ styles.drawerOptionText }>Recent</Text>
+            </TouchableOpacity>
+
+            {/* view for option 2 */}
+            <TouchableOpacity onPress={ this.handlePlaces } style={ styles.drawerOptionCont }>
+              <View style={ styles.drawerOptionView }>
+                <Icon size={22} name="md-pin" />
+              </View>
+              <Text style={ styles.drawerOptionText }>Your places</Text>
+            </TouchableOpacity>
+
+            {/* view for option 3 */}
+            <TouchableOpacity onPress={ this.handleEdit } style={ styles.drawerOptionCont }>
+              <View style={ styles.drawerOptionView }>
+                <Icon size={22} name="ios-create" />
+              </View>
+              <Text style={ styles.drawerOptionText }>Edit profile</Text>
+            </TouchableOpacity>
+
+            <View style={ styles.drawerLines }></View>
+
+            <View style={ styles.drawerMenuCont }>
+              <View style={ styles.drawerMenuView }>
+                <TouchableOpacity onPress={() => console.log("SETTINGS WAS PRESSED")} style={ styles.drawerMenuTouch }>
+                  <Text style={ styles.drawerMenuText }>
+                    Settings
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => console.log("LOGOUT WAS PRESSED")} style={ styles.drawerMenuTouch }>
+                  <Text style={ styles.drawerMenuText }>
+                    Logout
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <Text style={ styles.drawerOptionText }>Recent</Text>
-          </TouchableOpacity>
 
-          {/* view for option 2 */}
-          <TouchableOpacity onPress={ this.handlePlaces } style={ styles.drawerOptionCont }>
-            <View style={ styles.drawerOptionView }>
-              <Icon size={22} name="md-pin" />
-            </View>
-            <Text style={ styles.drawerOptionText }>Your places</Text>
-          </TouchableOpacity>
-
-          {/* view for option 3 */}
-          <TouchableOpacity onPress={ this.handleEdit } style={ styles.drawerOptionCont }>
-            <View style={ styles.drawerOptionView }>
-              <Icon size={22} name="ios-create" />
-            </View>
-            <Text style={ styles.drawerOptionText }>Edit profile</Text>
-          </TouchableOpacity>
-
-          <View style={ styles.drawerLines }></View>
-
-          <View style={ styles.drawerMenuCont }>
-            <View style={ styles.drawerMenuView }>
-              <TouchableOpacity onPress={() => console.log("SETTINGS WAS PRESSED")} style={ styles.drawerMenuTouch }>
-                <Text style={ styles.drawerMenuText }>
-                  Settings
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => console.log("LOGOUT WAS PRESSED")} style={ styles.drawerMenuTouch }>
-                <Text style={ styles.drawerMenuText }>
-                  Logout
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={ styles.drawerLines }></View>
+            <View style={ styles.drawerLines }></View>
 
             <View style={ styles.drawerTierView }>
               <Text style={ styles.drawerTierTitle }>Tier: </Text>
@@ -184,6 +185,9 @@ class MapContainer extends Component {
               <Text style={ styles.drawerTierTitle }>Karma: </Text>
               <Text style={ styles.drawerTierDesc }>3754</Text>
             </View>
+          </ScrollView>
+
+
         </View>
       )
       // customize drawer's style (Optional)
