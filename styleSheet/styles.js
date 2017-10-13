@@ -114,6 +114,11 @@ const styles = StyleSheet.create({
   leftTop: {
     backgroundColor: 'white'
   },
+  drawer: {
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    shadowRadius: 10
+  },
   drawerProfileView: {
     width: '100%',
     backgroundColor: 'white',

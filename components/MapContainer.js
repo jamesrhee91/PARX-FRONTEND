@@ -4,10 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
-import Silver from '../mapStyles/Silver.json'
-import Dark from '../mapStyles/Dark.json'
-import Night from '../mapStyles/Night.json'
-import Retro from '../mapStyles/Retro.json'
+import { Silver, Dark, Night, Retro } from '../mapStyles/customMapStyles'
 import styles from '../styleSheet/styles'
 import * as locationActions from '../actions/location'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -186,27 +183,15 @@ class MapContainer extends Component {
               <Text style={ styles.drawerTierDesc }>3754</Text>
             </View>
           </ScrollView>
-
-
         </View>
       )
-      // customize drawer's style (Optional)
-      var customStyles = {
-        drawer: {
-          shadowColor: '#000',
-          shadowOpacity: 0.4,
-          shadowRadius: 10
-        },
-        mask: {}, // style of mask if it is enabled
-        main: {} // style of main board
-      }
       return(
         <Drawer
           ref="drawer"
           drawerWidth={270}
           drawerContent={drawerContent}
           type={Drawer.types.Overlay}
-          customStyles={{drawer: customStyles.drawer}}
+          customStyles={{drawer: styles.drawer}}
           drawerPosition={Drawer.positions.Left}
           easingFunc={Easing.ease}
         >
@@ -217,7 +202,7 @@ class MapContainer extends Component {
             showsUserLocation={ true }
             showsMyLocationButton={ false }
             showsTraffic={ true }
-            customMapStyle={ Silver }
+            customMapStyle={ Retro }
             initialRegion={ this.props.region }
             onRegionChange={ this.onRegionChange }
             onPress={ this.clearMarkers }
