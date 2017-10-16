@@ -30,21 +30,12 @@ class Location extends Component {
         <View style={ styles.listContent }>
           <Text>Saved on {this.props.location.time}</Text>
           <Text>Latitude: {this.props.location.lat}, Longitude: {this.props.location.lng}</Text>
-          {/* <Text>ID {this.props.location.id}</Text> */}
         </View>
       </SwipeRow>
     )
   }
 }
 
-// export default Location
-
-// function mapStateToProps(state) {
-//   return {
-//     locations: state.loader.locations
-//   }
-// }
-//
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(swipeActions, dispatch)
 }

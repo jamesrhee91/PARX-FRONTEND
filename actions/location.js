@@ -5,6 +5,7 @@ export function fetchLocation() {
   return (dispatch) => {
     dispatch({ type: 'FETCHING_LOCATION' })
     navigator.geolocation.getCurrentPosition(pos => {
+      console.log(pos.coords)
       dispatch({ type: 'FETCHED_LOCATION', payload: pos.coords })
       dispatch({ type: 'SEARCH_LOCATION', payload: pos.coords })
     })

@@ -228,8 +228,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3
   },
   deleteTrash: {
-    marginRight: 26,
-    color: 'white'
+    marginRight: 26
   },
   listContent: {
     height: 70,

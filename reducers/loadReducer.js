@@ -2,11 +2,8 @@ import { AppRegistry, StyleSheet, Text, View, Dimensions } from 'react-native'
 
 const dims = Dimensions.get('window')
 const ASPECT_RATIO = dims.width / dims.height
-// const LATITUDE = 40.764326
-// const LONGITUDE = -73.925683
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
-// const LONGITUDE_DELTA = 0.0421
 const DEFAULT_STATE = {
   latitude: 40.764326,
   longitude: -73.925683,

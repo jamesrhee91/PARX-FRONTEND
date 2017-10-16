@@ -41,7 +41,7 @@ class MapContainer extends Component {
     }
   }
 
-  routeCoords = (e, coord) => {
+  routeCoords = (coord) => {
     const start = `${this.props.userLoc.latitude}, ${this.props.userLoc.longitude}`
     const dest = `${coord.lat}, ${coord.lng}`
     this.props.getDirections(start, dest)
@@ -53,6 +53,7 @@ class MapContainer extends Component {
   animate = (coords, duration) => {
     this.refs.map.animateToCoordinate(coords, duration)
   }
+
   searchAnimate = (coords, duration) => {
     this.refs.map.animateToCoordinate(coords, duration)
     this.props.dispatchSearchMarker(coords)
@@ -121,11 +122,11 @@ class MapContainer extends Component {
             </View>
 
             <View style={ styles.drawerPicView }>
-              <Image source={require('../assets/image/auggie.png')} style={ styles.drawerPic } />
+              <Image source={require('../assets/image/user.png')} style={ styles.drawerPic } />
             </View>
             <View style={ styles.drawerEmailView }>
               <Text style={ styles.drawerEmailText }>
-                james.rhee@flatironschool.com
+                james.rhee@domain.com
               </Text>
             </View>
           </View>
@@ -211,9 +212,9 @@ class MapContainer extends Component {
             >
               {this.props.route.length > 0 ? <MapView.Polyline coordinates={this.props.route} strokeWidth={5} strokeColor="#232223" /> : null}
 
-              {this.props.longPress.latitude ? <MapView.Marker pinColor='#232223' coordinate={this.props.longPress} onPress={() => this.animate(this.props.longPress, 300)}></MapView.Marker> : null}
+              {this.props.longPress.latitude ? <Marker mode={true} color="#232223" saveLocation={this.saveLocation} animate={this.animate} coord={ {lat: this.props.longPress.latitude, lng: this.props.longPress.longitude} } routeCoords={this.routeCoords}></Marker> : null}
 
-              {this.props.searchMarker.latitude ? <MapView.Marker pinColor='#232223' coordinate={this.props.searchMarker} onPress={() => this.animate(this.props.searchMarker, 300)}></MapView.Marker> : null}
+              {this.props.searchMarker.latitude ? <Marker mode={true} color="#232223" saveLocation={this.saveLocation} animate={this.animate} coord={ {lat: this.props.searchMarker.latitude, lng: this.props.searchMarker.longitude} } routeCoords={this.routeCoords}></Marker> : null}
 
               { markers }
           </MapView>
@@ -255,17 +256,6 @@ class MapContainer extends Component {
     }
   }
 }
-
-{/* </View> */}
-{/* <Search searchAnimate={ this.searchAnimate } openMenu={ this.openMenu } /> */}
-{/* <View style={ styles.searchBar }>
-<View style={ styles.menu }>
-<Icon onPress={ this.openMenu } size={29} name="ios-menu-outline" style={ styles.icon } />
-</View>
-<View style={ styles.textContainer }>
-<Text style={ styles.textInput } onPress={() => navigate('Search')}>Enter Location</Text>
-</View>
-</View> */}
 
 function mapStateToProps(state) {
   return {

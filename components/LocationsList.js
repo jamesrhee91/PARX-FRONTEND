@@ -9,11 +9,11 @@ import Location from './Location'
 
 class LocationsList extends Component {
 
-    render() {
-      return (
-        <FlatList data={this.props.locations} renderItem={(loc, idx) => <Location key={idx} location={loc.item} /> } />
-      )
-    }
+  render() {
+    return (
+      <FlatList data={this.props.locations} renderItem={(loc, idx) => <Location key={idx} location={loc.item} /> } />
+    )
+  }
 }
 
 function mapStateToProps(state) {
