@@ -241,6 +241,18 @@ const styles = StyleSheet.create({
     shadowOffset: { "width": 0, "height": 5 },
     shadowColor: '#000',
     shadowRadius: 3
+  },
+  loginButton: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    height: 50,
+    width: '90%',
+    shadowOpacity: 0.25,
+    shadowOffset: { "width": 0, "height": 5 },
+    shadowColor: '#000',
+    shadowRadius: 3
   }
 })
 

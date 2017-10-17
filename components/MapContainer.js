@@ -20,6 +20,14 @@ class MapContainer extends Component {
     this.props.fetchLocation()
   }
 
+  navigate = (param) => {
+    return this.props.navigation.navigate(param)
+  }
+
+  goBack = (param) => {
+    return this.props.navigation.goBack(param)
+  }
+
   onRegionChange = (region) => {
     this.props.regionChange(region)
   }
@@ -99,6 +107,11 @@ class MapContainer extends Component {
     console.log("Hitting Edit profile");
   }
 
+  handleLogout = () => {
+    // this.navigate('Login')
+    this.goBack()
+  }
+
   render() {
     if (this.props.isLoading){
       return (
@@ -165,7 +178,7 @@ class MapContainer extends Component {
                     Settings
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("LOGOUT WAS PRESSED")} style={ styles.drawerMenuTouch }>
+                <TouchableOpacity onPress={ this.handleLogout } style={ styles.drawerMenuTouch }>
                   <Text style={ styles.drawerMenuText }>
                     Logout
                   </Text>
