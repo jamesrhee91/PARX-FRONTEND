@@ -6,4 +6,4 @@ Persists user's location when vacating a public parking space and allows for oth
 Made with using
  - React Native for client side
  - Ruby on Rails for server side
- - PostgreSQL with PostGIS for data management
+ - PostgreSQL with PostGIS for data querying
