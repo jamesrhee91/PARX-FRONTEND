@@ -16,6 +16,18 @@ export default class Signup extends Component {
     }
   }
 
+  handleFirstName = (input) => {
+    this.setState({
+      firstName: input
+    })
+  }
+
+  handleLastName = (input) => {
+    this.setState({
+      lastName: input
+    })
+  }
+
   handleEmailChange = (input) => {
     this.setState({
       email: input
@@ -23,19 +35,47 @@ export default class Signup extends Component {
   }
 
   handlePasswordChange = (input) => {
-    console.log(input);
     this.setState({
       password: input
     })
   }
 
   handleSubmit = () => {
-    
+    let data = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': "application/json"
+      },
+      body: JSON.stringify({
+        user: {
+          first_name: this.state.firstName,
+          last_name: this.state.lastName,
+          email: this.state.email,
+          password: this.state.password
+        }
+      })
+    }
+    // fetch('http://localhost:3000/api/v1/users', data)
+    fetch('https://parx-api.herokuapp.com/api/v1/users', data)
+      .then(res => res.json())
+      .then(user => {
+        if (user.error) {
+          this.setState({
+            error: true
+          })
+        } else {
+          this.setState({
+            error: false
+          })
+          this.props.navigation.navigate('Map')
+        }
+      })
+      .catch(error => console.log("Error at Signup Submit", error))
   }
 
   handleLogin = () => {
-    const {goBack} = this.props.navigation
-    goBack()
+    this.props.navigation.goBack()
   }
 
   render() {
@@ -54,11 +94,9 @@ export default class Signup extends Component {
             <FormInput autoCapitalize="none" onChangeText={this.handleEmailChange} value={this.state.email} autoCorrect={false}/>
             <FormLabel>Password</FormLabel>
             <FormInput secureTextEntry={true} onChangeText={this.handlePasswordChange} value={this.state.password} autoCorrect={false}/>
-            <FormLabel>Confirm Password</FormLabel>
-            <FormInput secureTextEntry={true} onChangeText={this.handlePasswordChange} value={this.state.password} autoCorrect={false}/>
-            <FormValidationMessage>{this.state.error ? 'Username or Password is incorrect' : null}</FormValidationMessage>
+            <FormValidationMessage>{this.state.error ? 'Email is already in use' : null}</FormValidationMessage>
             <View style={{marginTop: 20, marginBottom: 10}}>
-              <TouchableOpacity style={ styles.loginButton }>
+              <TouchableOpacity onPress={this.handleSubmit} style={ styles.loginButton }>
                 <Text style={{color: 'white', fontSize: 16}}>Create an Account</Text>
               </TouchableOpacity>
             </View>

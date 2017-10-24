@@ -47,11 +47,9 @@ export function getData(coord) {
   return (dispatch) => {
     const lat = coord.latitude.toString().replace(/\./, '_')
     const lng = coord.longitude.toString().replace(/\./, '_')
-    console.log("MY DATA", coord);
     fetch(`https://parx-api.herokuapp.com/api/v1/locations/${lat}&${lng}`)
       .then(res => res.json())
       .then(coords => {
-        console.log("THIS IS COORDS", coords);
         if (coords.empty) {
           dispatch({ type: 'FETCHED_COORDS', payload: coords.empty })
           Alert.alert("Sorry!", "There are no parking available in that area")

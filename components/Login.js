@@ -25,14 +25,42 @@ export default class Login extends Component {
   }
 
   handlePasswordChange = (input) => {
-    console.log(input);
     this.setState({
       password: input
     })
   }
 
   handleSubmit = () => {
-    this.navigate('Map')
+    // this.props.verifyLogin(this.state.email, this.state.password)
+    let data = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': "application/json"
+      },
+      body: JSON.stringify({
+        user: {
+          email: this.state.email,
+          password: this.state.password
+        }
+      })
+    }
+    // fetch('http://localhost:3000/api/v1/login', data)
+    fetch('https://parx-api.herokuapp.com/api/v1/login', data)
+      .then(res => res.json())
+      .then(user => {
+        if (user.error) {
+          this.setState({
+            error: true
+          })
+        } else {
+          this.setState({
+            error: false
+          })
+          this.navigate('Map')
+        }
+      })
+      .catch(error => console.log("Error at Login Submit", error))
   }
 
   handleSignup = () => {

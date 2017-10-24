@@ -95,8 +95,7 @@ class MapContainer extends Component {
   handleRecent = () => {
     this.refs.drawer.closeDrawer()
     this.props.recentlySaved()
-    const {navigate} = this.props.navigation
-    navigate('Recent')
+    this.navigate('Recent')
   }
 
   handlePlaces = () => {
@@ -108,7 +107,6 @@ class MapContainer extends Component {
   }
 
   handleLogout = () => {
-    // this.navigate('Login')
     this.goBack()
   }
 
@@ -139,7 +137,7 @@ class MapContainer extends Component {
             </View>
             <View style={ styles.drawerEmailView }>
               <Text style={ styles.drawerEmailText }>
-                james.rhee@domain.com
+                guest@domain.com
               </Text>
             </View>
           </View>
