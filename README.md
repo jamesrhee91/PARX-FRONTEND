@@ -22,7 +22,8 @@ Persists User's location when vacating a public parking space and allows for oth
 3. Clone or download the repo and cd into the root folder
 4. Run ```yarn install``` or ```npm install``` in your terminal
 5. Run ```react-native run-ios``` to start the bundler and simulator
-
+6. Use email **guest@domain.com** and password **guest** to login without signing up
+7. Enjoy!
 
 
 ### Login / Signup
