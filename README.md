@@ -3,7 +3,7 @@
 Crowd sourced mobile parking app made with React Native and Ruby on Rails for registering and finding vacant parking space.
 Persists User's location when vacating a public parking space and allows for other Users to query for parking space around their current location or a given location.
 
-**This app is currently in production and was not intended to be deployed for public use. App was made as a personal project to demonstrate my web/mobile development skills.**
+**This app is currently in production and was not intended to be deployed for public use. App was made as a personal project to demonstrate my web/mobile development skills. Kindly note there are only pre-seeded parking data around Times Square, Charging Bull, and 29th Street / Broadway**
 
 ## Made using
  - React Native for client side
